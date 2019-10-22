@@ -1138,15 +1138,31 @@ class Solution:
 
 ```python
 class Solution:
-    def isSymmetric(self, root: TreeNode) -> bool:
-        def check(root1,root2):
-            if(root1==None and root2==None):
-                return True
-            elif(root1!=None and root2!=None and root1.val==root2.val):
-                return check(root1.left,root2.right) and check(root2.left,root1.right)
-            else:
-                return False
-        return check(root,root)
+    def levelOrder(self, root):
+        """
+        :type root: TreeNode
+        :rtype: List[List[int]]
+        """
+        levels = []
+        if not root:
+            return levels
+        
+        def helper(node, level):
+            # start the current level
+            if len(levels) == level:
+                levels.append([])
+
+            # append the current node value
+            levels[level].append(node.val)
+
+            # process child nodes for the next level
+            if node.left:
+                helper(node.left, level + 1)
+            if node.right:
+                helper(node.right, level + 1)
+            
+        helper(root, 0)
+        return levels
 
 ```
 
@@ -1156,21 +1172,21 @@ class Solution:
 
 ```python
 class Solution:
-    def levelOrderBottom(self, root: TreeNode) -> List[List[int]]:
+    def levelOrder(self, root):
         if(root==None):
             return None
-        stack,res=[root],[]
-        while(stack):
-            temp_stack=[]
-            sub_list=[]
-            for node in stack:
-                sub_list.append(node.val)
-                if(node.left):
-                    temp_stack.append(node.left)
-                if(node.right):
-                    temp_stack.append(node.right)
-            stack=temp_stack
-            res.insert(0,sub_list)        #这个是从底层倒着输出的 对应107题，对于这道题目,应改成res.append(sub_list)
+        now,res=[root],[]
+        while(parents):
+            children=[]
+            sublist=[]
+            for parent in parents:
+                sub_list.append(parent.val)
+                if(parent.left):
+                    temp.append(parent.left)
+                if(parent.right):
+                    temp.append(parent.right)
+            parents=children
+            res.append(sub_list)       #107题是从底层倒着遍历,应改成                                     #res.insert(0,sub_list)
         return res
 
 ```
@@ -1222,30 +1238,34 @@ class Solution:
 ```python
 class Solution(object):
     def buildTree(self, preorder, inorder):
-        if(not inorder):
-            return None
-        x=preorder.pop(0)
-        root=TreeNode(x)
-        mid=inorder.index(x)
-        root.left=self.buildTree(preorder[:mid],inorder[:mid])
-        root.right=self.buildTree(preorder[mid:],inorder[mid+1:])
-        #为啥preorder的mid不用+1呢，因为preorder的第一个数已经弹出来了，而inorder的中间节点还在里面，所以要把那个跳过，要+1
-        return root
+        if inorder:
+            ind = inorder.index(preorder.pop(0))
+            root = TreeNode(inorder[ind])
+            root.left = self.buildTree(preorder, inorder[0:ind])
+            root.right = self.buildTree(preorder, inorder[ind+1:])
+            return root
+        return None
 
 ```
 
 ## 106.从中序和后序遍历序列构造二叉树
 
 ```python
-class Solution:
-    def buildTree(self, inorder: List[int], postorder: List[int]) -> TreeNode:
-        if(len(inorder)==0):return None
-        x=postorder.pop()        #唯一不同之处
-        mid=inorder.index(x)
-        root=TreeNode(x)
-        root.left=self.buildTree(inorder[:mid],postorder[:mid])
-        root.right=self.buildTree(inorder[mid+1:],postorder[mid:])
-        return root
+class Solution(object):
+    def buildTree(self, inorder, postorder):
+        """
+        :type inorder: List[int]
+        :type postorder: List[int]
+        :rtype: TreeNode
+        """
+        if inorder and postorder:
+            ind = inorder.index(postorder.pop())
+            root = TreeNode(inorder[ind])
+
+            root.right = self.buildTree(inorder[ind+1:],postorder)
+            root.left = self.buildTree(inorder[0:ind],postorder)
+            return root
+        return None
 
 ```
 
