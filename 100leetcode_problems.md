@@ -1278,18 +1278,17 @@ class Solution(object):
 ```python
 class Solution:
     def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+
         def buildTree(nums,l,r):
             if(l>r):
-                return None    #表示叶子节点左右都赋值为None
+                return None    #不能加=，因为当l==r时候，要把它本身当做节点加进去
             m=int(l+(r-l)/2)
             root=TreeNode(nums[m])
             root.left=buildTree(nums,l,m-1)
             root.right=buildTree(nums,m+1,r)
-            return root    #返回root赋给上层节点的left和right
-        if not nums:
-            return None
-        else:
-            return buildTree(nums,0,len(nums)-1)
+            return root    
+
+            return buildTree(nums,0,len(nums)-1) if nums else None
 
 ```
 
@@ -1328,9 +1327,14 @@ class Solution:
 class Solution:
     def minDepth(self, root: TreeNode) -> int:
         if(not root):return 0
+
         if(not root.left):return self.minDepth(root.right)+1
         if(not root.right):return self.minDepth(root.left)+1
+
+        #叶子节点定义应该为左右子树都为空，所以一旦一侧为空就要看另一侧的深度，即是这个节点的深度
+
         return min(self.minDepth(root.left),self.minDepth(root.right))+1
+
 #四个出口条件，1.此时参数为None，返回0即可，表示并不增加深度
 #           2.左子树节点为空，返回右子节点的最小深度+1，。为什么不返回0，因为此时这个节点可能不是叶子节点，还要考察右子树节点
 #           3.与上面类似
@@ -1381,19 +1385,18 @@ class Solution:
 2.深度优先搜索，迭代：
 
 ```python
-class Solution:
-    def hasPathSum(self, root: TreeNode, sum: int) -> bool:
-        if(not root):return False
-        stack=[(root,sum-root.val)]
-        while(stack):
-            node,cur_sum=stack.pop()
-            if(not node.left and not node.right and cur_sum==0):
+class Solution(object):
+    def hasPathSum(self, root, sum):
+        if not root:return False
+        stack=[(root,sum)]
+        while stack:
+            node,cursum=stack.pop()
+            if node.left==None and node.right==None and cursum==node.val:
                 return True
-            if(node.left):
-                stack.append((node.left,cur_sum-node.left.val))
-            if(node.right):
-                stack.append((node.right,cur_sum-node.right.val))
-                   
+            if node.left:
+                stack.append((node.left,cursum-node.val))
+            if node.right:
+                stack.append((node.right,cursum-node.val))
         return False
 
 ```
