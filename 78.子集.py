@@ -45,7 +45,7 @@ class Solution(object):
     def dfs(self,index,path,nums,res):
         res.append(path)
         print(path)
-        for i in xrange(index,len(nums)):
+        for i in range(index,len(nums)):
             self.dfs(i+1,path+[nums[i]],nums,res)
 
 #第二种：列表推导式
