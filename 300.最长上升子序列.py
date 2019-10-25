@@ -37,10 +37,9 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        n=len(nums)
-        if n==0:return 0
-        dp=[1]*n
-        for i in range(1,n):
+        if not nums:return 0
+        dp=[1]*len(nums)
+        for i in range(1,len(nums)):
             for j in range(i):
                 if nums[i] > nums[j]:
                     dp[i] = max(dp[i],dp[j] + 1)
