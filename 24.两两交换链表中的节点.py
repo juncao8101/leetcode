@@ -37,4 +37,14 @@ class Solution(object):
         :type head: ListNode
         :rtype: ListNode
         """
-        
+        front=ListNode(0)
+        front.next=head
+        newhead=front
+        while front.next and front.next.next:   #成对就交换，有落单的不用管
+            a=front.next
+            b=a.next
+            front.next,b.next,a.next=b,a,b.next #逗号表达式的原理是，右边一起打包存入一个新元组，然后给右边，因此不用担心顺序问题
+
+            front=a     #更新front
+        return newhead.next
+

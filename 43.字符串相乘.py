@@ -42,5 +42,5 @@ class Solution(object):
         :type num2: str
         :rtype: str
         """
-        
+        return str(eval(num1+'*'+num2))
 
